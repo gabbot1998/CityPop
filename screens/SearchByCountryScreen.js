@@ -24,7 +24,7 @@ export default class SearchByCountryScreen extends Component {
         <Button
           title="SEARCH BY COUNTRY"
           onPress={() =>
-            getCityPopulation(this.state.city)
+            getPopulationIn(this.state.city)
           }
         />
 
@@ -32,7 +32,12 @@ export default class SearchByCountryScreen extends Component {
     );
 }
 }
-function getCityPopulation(city) {
+
+function getCitysIn(country) {
+
+}
+
+function getPopulationIn(city) {
   return fetch('http://api.geonames.org/searchJSON?q=' + city +'&maxRows=1&username=weknowit')
     .then((response) => response.json())
     .then((responseJson) => {
