@@ -4,6 +4,8 @@ import { Button } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
 import * as WebBrowser from 'expo-web-browser';
 
+let NUMBER_OFF_CITIES = 3;
+
 export default class SearchByCountryScreen extends Component {
   constructor(props) {
     super(props);
@@ -16,15 +18,20 @@ export default class SearchByCountryScreen extends Component {
 
         <TextInput
           style={{height: 50, fontSize: 30,}}
-          placeholder="Entera a country name"
+          placeholder="Enter a country name"
           onChangeText={(input) => this.setState({country: input})}
           value={this.state.city}
         />
 
         <Button
           title="SEARCH BY COUNTRY"
-          onPress={() =>
-            getPopulationIn(this.state.city)
+          onPress={() => {
+              let cities = getCitiesIn(this.state.country)
+              cities.then((cities) => {
+                console.log(cities)
+                this.props.navigation.navigate('Cities', cities);
+              });
+            }
           }
         />
 
@@ -33,17 +40,27 @@ export default class SearchByCountryScreen extends Component {
 }
 }
 
-function getCitysIn(country) {
+function parseCities(cities) {
+  let temp = {}
+
+  for(let city in cities.geonames){
+    temp[cities.geonames[city].name] = cities.geonames[city].population
+  }
+
+  return temp;
 
 }
 
-function getPopulationIn(city) {
-  return fetch('http://api.geonames.org/searchJSON?q=' + city +'&maxRows=1&username=weknowit')
+function getCitiesIn(country) {
+  return fetch('http://api.geonames.org/searchJSON?name=' + country +'&maxRows=1&username=weknowit')
     .then((response) => response.json())
-    .then((responseJson) => {
-      console.log(responseJson.geonames[0].population);
-    })
-    .catch((e) => {
-      console.error(e);
-    })
+    .then((re) => getCitiesFromCountryCode(JSON.stringify(re.geonames[0].countryCode)))
+    .then((re) => parseCities(re))
+    .catch((e) => console.error(e))
+}
+
+function getCitiesFromCountryCode(countryCode) {
+  return fetch('http://api.geonames.org/searchJSON?country=' + countryCode + '&featureClass=P&maxRows=' + NUMBER_OFF_CITIES + '&orderby=population&username=weknowit')
+  .then((response) => response.json())
+  .catch((e) => console.error(e))
 }

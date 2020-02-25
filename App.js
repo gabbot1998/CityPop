@@ -7,6 +7,7 @@ import HomeScreen from './screens/HomeScreen';
 import SearchByCityScreen from './screens/SearchByCityScreen.js';
 import SearchByCountryScreen from './screens/SearchByCountryScreen.js';
 import CityResultScreen from './screens/CityResultScreen.js';
+import CountryResultScreen from './screens/CountryResultScreen.js';
 import { createStackNavigator } from '@react-navigation/stack';
 
 
@@ -35,6 +36,11 @@ export default function App() {
           <Stack.Screen
             name="Population"
             component={CityResultScreen}
+          />
+
+          <Stack.Screen
+            name="Cities"
+            component={CountryResultScreen}
           />
 
         </Stack.Navigator>
