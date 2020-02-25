@@ -8,39 +8,45 @@ import TopText from '../components/TopText';
 export default function HomeScreen({navigation}) {
 
   return(
-    <View >
-
-      <Text style={styles.cityPop}>
-      CityPop
+    <View>
+      <Text style={styles.title}>
+        CityPop
       </Text>
 
-      <Button
-        title="SEARCH BY CITY"
-        style={styles.button}
-        onPress={() => navigation.navigate('Search by city')}
-      />
+      <View style={styles.container}>
+        <Button
+          title="SEARCH BY CITY"
+          style={styles.button}
+          onPress={() => navigation.navigate('Search by city')}
+        />
 
-      <Button
-        title="SEARCH BY COUNTRY"
-        style={styles.button}
-        onPress={() => navigation.navigate('Search by country')}
-      />
-
+        <Button
+          title="SEARCH BY COUNTRY"
+          style={styles.button}
+          onPress={() => navigation.navigate('Search by country')}
+        />
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  cityPop: {
+  title: {
+    flex: 1,
     textAlign: 'center',
+    paddingTop: 100,
     paddingBottom: 100,
     fontSize: 40,
     alignItems: 'center',
-    justifyContent: 'center',
   },
 
   button: {
     width: 300,
-    padding: 5,
+    height: 60,
+    padding: 10,
   },
+
+  container: {
+    alignItems: 'center',
+  }
 });

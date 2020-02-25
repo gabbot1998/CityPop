@@ -12,14 +12,19 @@ export default class CityResultScreen extends Component {
 
 
   render() {
-    let cityPopList = createCitiesList(this.props.route.params)
+    let cityPopList = createCitiesList(this.props.route.params.towns)
 
     return(
-      <View>
+      <View style={styles.container}>
+
+      <Text style={styles.title}>
+        {this.props.route.params.country}
+      </Text>
       <FlatList
           data={cityPopList}
           renderItem={({item}) =>
             <Button
+              style={styles.button}
               title={item[0]}
               onPress={() => { this.props.navigation.navigate('Population', {city: item[0], population: item[1],})}}
             >
@@ -27,8 +32,28 @@ export default class CityResultScreen extends Component {
         />
       </View>
     );
+  }
 }
-}
+
+const styles = StyleSheet.create({
+  title: {
+    flex: 1,
+    textAlign: 'center',
+    paddingTop: 100,
+    paddingBottom: 170,
+    fontSize: 40,
+    alignItems: 'center',
+  },
+
+  button: {
+    width: 300,
+    height: 55,
+  },
+
+  container: {
+    alignItems: 'center',
+  }
+});
 
 function createCitiesList(cities) {
   let list = []
