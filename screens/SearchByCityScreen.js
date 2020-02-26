@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { Image, Platform, StyleSheet, Text, TouchableOpacity, View, TextInput } from 'react-native';
+import { Image, Platform, StyleSheet, Text, TouchableOpacity, View, TextInput, ActivityIndicator } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import * as WebBrowser from 'expo-web-browser';
 
 export default class SearchByCityScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = {city: '', population: ''};
+    this.state = {city: '', population: '', loading: <View style={{height: 36}}/>};
   }
 
   render() {
@@ -17,33 +17,50 @@ export default class SearchByCityScreen extends Component {
         SEARCH BY CITY
         </Text>
 
+        {this.state.loading}
 
         <View style={styles.container}>
           <TextInput
             style={styles.input}
             placeholder="Entera a city"
+            returnKeyType="search"
+            onSubmitEditing={() => { if (this.state.city === ''){
+                } else {
+                  this.setState({loading: <ActivityIndicator size = "large" />})
+                  getCityPopulation(this.state.city)
+                  .then((responseJson) => {
+                    this.setState({population: JSON.stringify(responseJson.geonames[0].population)});
+                    this.props.navigation.navigate('Population', {
+                      city: this.state.city,
+                      population: this.state.population,
+                    });
+                    this.setState({loading: <View style={{height: 36}}/>})
+                  });
+                }
+              }
+            }
             onChangeText={(input) => this.setState({city: input})}
             value={this.state.city}
           />
         </View>
 
-
         <View style={styles.container}>
           <TouchableOpacity
-            title="SEARCH BY CITY"
-            onPress={() => {
-              getCityPopulation(this.state.city)
-              .then((responseJson) => {
-                this.setState({population: JSON.stringify(responseJson.geonames[0].population)});
-                this.props.navigation.navigate('Population', {
-                  city: this.state.city,
-                  population: this.state.population,
-                });
-              });
-
-
+            onPress={() => { if (this.state.city === ''){
+              } else {
+                this.setState({loading: <ActivityIndicator size = "large" />})
+                getCityPopulation(this.state.city)
+                .then((responseJson) => {
+                  this.setState({population: JSON.stringify(responseJson.geonames[0].population)});
+                  this.props.navigation.navigate('Population', {
+                    city: this.state.city,
+                    population: this.state.population,
+                  });
+                  this.setState({loading: <View style={{height: 36}}/>})
+                })
               }
             }
+          }
           >
             <Image
               source={require('./../assets/magnifying-glass.png')}
@@ -51,8 +68,6 @@ export default class SearchByCityScreen extends Component {
             />
           </TouchableOpacity>
         </View>
-
-
       </View>
     );
   }
@@ -60,12 +75,10 @@ export default class SearchByCityScreen extends Component {
 
 const styles = StyleSheet.create({
   title: {
-    flex: 1,
     textAlign: 'center',
     paddingTop: 100,
     paddingBottom: 100,
-    fontSize: 30,
-    alignItems: 'center',
+    fontSize: 35,
   },
   input: {
     width: 300,

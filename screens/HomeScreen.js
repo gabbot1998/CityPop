@@ -14,17 +14,22 @@ export default function HomeScreen({navigation}) {
       </Text>
 
       <View style={styles.container}>
-        <Button
-          title="SEARCH BY CITY"
-          style={styles.button}
+        <TouchableOpacity
           onPress={() => navigation.navigate('Search by city')}
-        />
-
-        <Button
+        >
+          <View style={styles.button}>
+            <Text style={styles.buttonText}>SEARCH BY CITY</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity
           title="SEARCH BY COUNTRY"
-          style={styles.button}
           onPress={() => navigation.navigate('Search by country')}
-        />
+        >
+          <View style={styles.button}>
+            <Text style={styles.buttonText}>SEARCH BY COUNTRY</Text>
+          </View>
+
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -32,18 +37,23 @@ export default function HomeScreen({navigation}) {
 
 const styles = StyleSheet.create({
   title: {
-    flex: 1,
     textAlign: 'center',
     paddingTop: 100,
     paddingBottom: 100,
     fontSize: 40,
-    alignItems: 'center',
   },
 
   button: {
-    width: 300,
-    height: 60,
-    padding: 10,
+    marginBottom: 10,
+    marginTop: 10,
+    width: 260,
+    height: 40,
+    backgroundColor: '#2196F3',
+    justifyContent: 'center',
+  },
+  buttonText: {
+    textAlign: 'center',
+    color: 'white',
   },
 
   container: {

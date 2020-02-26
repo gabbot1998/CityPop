@@ -35,12 +35,10 @@ export default class CityResultScreen extends Component {
 
 const styles = StyleSheet.create({
   title: {
-    flex: 1,
     textAlign: 'center',
     paddingTop: 100,
     paddingBottom: 200,
     fontSize: 30,
-    alignItems: 'center',
   },
   population: {
     fontSize: 16,

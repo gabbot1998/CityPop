@@ -23,12 +23,14 @@ export default class CityResultScreen extends Component {
       <FlatList
           data={cityPopList}
           renderItem={({item}) =>
-            <Button
-              style={styles.button}
-              title={item[0]}
-              onPress={() => { this.props.navigation.navigate('Population', {city: item[0], population: item[1],})}}
-            >
-            </Button>}
+            <View>
+              <TouchableOpacity onPress={() => { this.props.navigation.navigate('Population', {city: item[0], population: item[1],})}} >
+                <View style={styles.button}>
+                  <Text style={styles.buttonText}>{item[0]}</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          }
         />
       </View>
     );
@@ -37,17 +39,24 @@ export default class CityResultScreen extends Component {
 
 const styles = StyleSheet.create({
   title: {
-    flex: 1,
     textAlign: 'center',
     paddingTop: 100,
-    paddingBottom: 170,
+    paddingBottom: 100,
     fontSize: 40,
-    alignItems: 'center',
   },
 
   button: {
-    width: 300,
-    height: 55,
+    marginBottom: 10,
+    marginTop: 10,
+    width: 260,
+    height: 40,
+    backgroundColor: '#2196F3',
+    justifyContent: 'center',
+  },
+
+  buttonText: {
+    textAlign: 'center',
+    color: 'white',
   },
 
   container: {
