@@ -8,39 +8,55 @@ import TopText from '../components/TopText';
 export default function HomeScreen({navigation}) {
 
   return(
-    <View >
-
-      <Text style={styles.cityPop}>
-      CityPop
+    <View>
+      <Text style={styles.title}>
+        CityPop
       </Text>
 
-      <Button
-        title="SEARCH BY CITY"
-        style={styles.button}
-        onPress={() => navigation.navigate('Search by city')}
-      />
+      <View style={styles.container}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Search by city')}
+        >
+          <View style={styles.button}>
+            <Text style={styles.buttonText}>SEARCH BY CITY</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          title="SEARCH BY COUNTRY"
+          onPress={() => navigation.navigate('Search by country')}
+        >
+          <View style={styles.button}>
+            <Text style={styles.buttonText}>SEARCH BY COUNTRY</Text>
+          </View>
 
-      <Button
-        title="SEARCH BY COUNTRY"
-        style={styles.button}
-        onPress={() => navigation.navigate('Search by country')}
-      />
-
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  cityPop: {
+  title: {
     textAlign: 'center',
+    paddingTop: 100,
     paddingBottom: 100,
     fontSize: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 
   button: {
-    width: 300,
-    padding: 5,
+    marginBottom: 10,
+    marginTop: 10,
+    width: 260,
+    height: 40,
+    backgroundColor: '#2196F3',
+    justifyContent: 'center',
   },
+  buttonText: {
+    textAlign: 'center',
+    color: 'white',
+  },
+
+  container: {
+    alignItems: 'center',
+  }
 });

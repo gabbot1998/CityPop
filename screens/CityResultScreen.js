@@ -12,13 +12,46 @@ export default class CityResultScreen extends Component {
 
 
   render() {
+    let pop = this.props.route.params.population
     return(
       <View>
-      <Text>
-        {this.props.route.params.city}
-        {this.props.route.params.population}
-      </Text>
+        <Text style={styles.title}>
+          {this.props.route.params.city}
+        </Text>
+        <View style={styles.container}>
+          <Text style={styles.population}>
+          Population
+          </Text>
+
+          <Text style={styles.number}>
+            {pop}
+          </Text>
+        </View>
+
       </View>
     );
 }
 }
+
+const styles = StyleSheet.create({
+  title: {
+    textAlign: 'center',
+    paddingTop: 100,
+    paddingBottom: 200,
+    fontSize: 30,
+  },
+  population: {
+    fontSize: 16,
+    paddingBottom: 20,
+    textAlign: 'center',
+  },
+  number: {
+    textAlign: 'center',
+    paddingBottom: 100,
+    fontSize: 40,
+  },
+  container: {
+    alignItems: 'center',
+  },
+
+})
