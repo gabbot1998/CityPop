@@ -32,7 +32,6 @@ export default class SearchByCityScreen extends Component {
           this.setModalVisible(!this.state.modalVisible);
           this.setState({loading: <View style={{height: 36}}/>})
         })
-
       }
     }
 
