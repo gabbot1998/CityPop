@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Image, Platform, StyleSheet, Text, TouchableOpacity, View, TextInput, ActivityIndicator } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import * as WebBrowser from 'expo-web-browser';
+import Modal, { ModalContent } from 'react-native-modals';
 
 export default class SearchByCityScreen extends Component {
   constructor(props) {
@@ -19,13 +20,19 @@ export default class SearchByCityScreen extends Component {
         this.getCityPopulation(this.state.city)
         .then((re) => {
           this.setState({population: JSON.stringify(re.geonames[0].population)});
+        })
+        .then((re) => {
           this.props.navigation.navigate('Population', {
             city: this.state.city,
             population: this.state.population,
           });
           this.setState({loading: <View style={{height: 36}}/>})
         })
-        .catch((e) => this.setModalVisible(!this.state.modalVisible))
+        .catch((e) => {
+          this.setModalVisible(!this.state.modalVisible);
+          this.setState({loading: <View style={{height: 36}}/>})
+        })
+
       }
     }
 
@@ -41,6 +48,18 @@ export default class SearchByCityScreen extends Component {
   render() {
     return(
       <View>
+
+        <Modal visible={this.state.modalVisible}>
+          <ModalContent style={styles.container}>
+            <Text style={styles.modalText}>no such city</Text>
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => {this.setState({modalVisible: false})}}
+            >
+              <Text style={styles.modalButtonText}>Ok</Text>
+            </TouchableOpacity>
+          </ModalContent>
+        </Modal>
 
         <Text style={styles.title}>
         SEARCH BY CITY
@@ -96,5 +115,22 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     resizeMode: 'contain'
-}
+  },
+  modalButton: {
+    width: 100,
+    height: 50,
+    alignItems: 'center',
+    backgroundColor: '#2196F3',
+    justifyContent: 'center',
+  },
+  modalButtonText: {
+    fontSize: 16,
+    color: "white"
+
+  },
+  modalText: {
+    fontSize: 20,
+    textAlign: 'center',
+    paddingBottom: 20,
+  }
 })

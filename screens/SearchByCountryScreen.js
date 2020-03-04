@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { Image, Platform, StyleSheet, Text, TouchableOpacity, View, TextInput, ActivityIndicator, Modal } from 'react-native';
+import { Image, Platform, StyleSheet, Text, TouchableOpacity, View, TextInput, ActivityIndicator} from 'react-native';
 import { Button } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
 import * as WebBrowser from 'expo-web-browser';
-//import Dialog, { DialogContent } from 'react-native-popup-dialog';
+import Modal, { ModalContent } from 'react-native-modals';
 
 let NUMBER_OFF_CITIES = 3;
 
@@ -33,19 +33,18 @@ export default class SearchByCountryScreen extends Component {
       .then((response) => response.json())
       .then((re) => this.getCitiesFromCountryCode(JSON.stringify(re.geonames[0].countryCode)))
       .then((re) => this.parseCities(re))
-      .catch((e) => this.setModalVisible(!this.state.modalVisible))
   }
 
   getCitiesFromCountryCode(countryCode) {
     return fetch('http://api.geonames.org/searchJSON?country=' + countryCode + '&featureClass=P&maxRows=' + NUMBER_OFF_CITIES + '&orderby=population&username=weknowit')
     .then((response) => response.json())
-    .catch((e) => this.setModalVisible(!this.state.modalVisible))
   }
 
   handleSearch(){ if (this.state.country === ''){
     } else {
         this.setState({loading: <ActivityIndicator size = "large" />})
         this.getCitiesIn(this.state.country)
+        .catch((e) => this.setModalVisible(!this.state.modalVisible))
         .then((cities) => {
           this.props.navigation.navigate('Cities', {towns: cities, country: this.state.country});
           this.setState({loading: <View style={{height: 36}}/>})
@@ -57,6 +56,19 @@ export default class SearchByCountryScreen extends Component {
   render() {
     return(
       <View>
+
+
+        <Modal visible={this.state.modalVisible}>
+          <ModalContent style={styles.container}>
+            <Text style={styles.modalText}>no such country</Text>
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => {this.setState({modalVisible: false})}}
+            >
+              <Text style={styles.modalButtonText}>Ok</Text>
+            </TouchableOpacity>
+          </ModalContent>
+        </Modal>
 
         <Text style={styles.title}>
           SEARCH BY COUNTRY
@@ -115,5 +127,22 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     resizeMode: 'contain'
-}
+  },
+  modalButton: {
+    width: 100,
+    height: 50,
+    alignItems: 'center',
+    backgroundColor: '#2196F3',
+    justifyContent: 'center',
+  },
+  modalButtonText: {
+    fontSize: 16,
+    color: "white"
+
+  },
+  modalText: {
+    fontSize: 20,
+    textAlign: 'center',
+    paddingBottom: 20,
+  }
 })
