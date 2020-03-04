@@ -6,8 +6,37 @@ import * as WebBrowser from 'expo-web-browser';
 export default class SearchByCityScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = {city: '', population: '', loading: <View style={{height: 36}}/>};
+    this.state = {city: '', population: '', loading: <View style={{height: 36}}/>, modalVisible: false};
   }
+
+  setModalVisible(visible) {
+    this.setState({modalVisible: visible});
+  }
+
+  handleSearch() { if (this.state.city === ''){
+      } else {
+        this.setState({loading: <ActivityIndicator size = "large" />})
+        this.getCityPopulation(this.state.city)
+        .then((re) => {
+          this.setState({population: JSON.stringify(re.geonames[0].population)});
+          this.props.navigation.navigate('Population', {
+            city: this.state.city,
+            population: this.state.population,
+          });
+          this.setState({loading: <View style={{height: 36}}/>})
+        })
+        .catch((e) => this.setModalVisible(!this.state.modalVisible))
+      }
+    }
+
+    getCityPopulation(city) {
+      return fetch('http://api.geonames.org/searchJSON?name=' + city +'&featureClass=P&maxRows=1&username=weknowit')
+        .then((response) => response.json())
+        .catch((e) => {
+          console.error(e);
+        })
+
+    }
 
   render() {
     return(
@@ -24,21 +53,7 @@ export default class SearchByCityScreen extends Component {
             style={styles.input}
             placeholder="Entera a city"
             returnKeyType="search"
-            onSubmitEditing={() => { if (this.state.city === ''){
-                } else {
-                  this.setState({loading: <ActivityIndicator size = "large" />})
-                  getCityPopulation(this.state.city)
-                  .then((responseJson) => {
-                    this.setState({population: JSON.stringify(responseJson.geonames[0].population)});
-                    this.props.navigation.navigate('Population', {
-                      city: this.state.city,
-                      population: this.state.population,
-                    });
-                    this.setState({loading: <View style={{height: 36}}/>})
-                  });
-                }
-              }
-            }
+            onSubmitEditing={() => {this.handleSearch()}}
             onChangeText={(input) => this.setState({city: input})}
             value={this.state.city}
           />
@@ -46,21 +61,7 @@ export default class SearchByCityScreen extends Component {
 
         <View style={styles.container}>
           <TouchableOpacity
-            onPress={() => { if (this.state.city === ''){
-              } else {
-                this.setState({loading: <ActivityIndicator size = "large" />})
-                getCityPopulation(this.state.city)
-                .then((responseJson) => {
-                  this.setState({population: JSON.stringify(responseJson.geonames[0].population)});
-                  this.props.navigation.navigate('Population', {
-                    city: this.state.city,
-                    population: this.state.population,
-                  });
-                  this.setState({loading: <View style={{height: 36}}/>})
-                })
-              }
-            }
-          }
+            onPress={() => {this.handleSearch()}}
           >
             <Image
               source={require('./../assets/magnifying-glass.png')}
@@ -97,12 +98,3 @@ const styles = StyleSheet.create({
     resizeMode: 'contain'
 }
 })
-
-function getCityPopulation(city) {
-  return fetch('http://api.geonames.org/searchJSON?name=' + city +'&featureClass=P&maxRows=1&username=weknowit')
-    .then((response) => response.json())
-    .catch((e) => {
-      console.error(e);
-    })
-
-}
